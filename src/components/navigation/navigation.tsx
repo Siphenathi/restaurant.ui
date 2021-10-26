@@ -14,7 +14,7 @@ const NavigationBar = () => {
     return (
             <Navbar
                 alignLinks="right"
-                brand={<a className="brand-logo left" href="/" style={{paddingLeft:"10%"}}>Shopping</a>}
+                brand={<NavLink to="/">Shopping</NavLink>}
                 id="mobile-nav"
                 menuIcon={<Icon>menu</Icon>}
                 centerChildren
@@ -31,7 +31,7 @@ const NavigationBar = () => {
                 preventScrolling: true
                 }}
             >
-                <NavLink to="/ddd">Error</NavLink>
+                <NavLink to="/404">404</NavLink>
                 <NavLink to="/">Shop</NavLink>
                 <NavLink to="/cart">Cart</NavLink>
                 <NavLink to="/cart">

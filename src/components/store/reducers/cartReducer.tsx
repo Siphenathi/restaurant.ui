@@ -6,7 +6,7 @@ import Item5 from '../../../images/item5.jpg';
 import Item6 from '../../../images/item6.jpg';
 import StoreModel from '../storeModel';
 
-import { ADD_TO_CART,REMOVE_ITEM,SUB_QUANTITY,ADD_QUANTITY,ADD_SHIPPING } from '../actions/constants';
+import { ADD_TO_CART, REMOVE_ITEM, SUB_QUANTITY, ADD_QUANTITY, ADD_SHIPPING, SUB_SHIPPING } from '../actions/constants';
 
 const initState: StoreModel = {
     Items: [
@@ -23,59 +23,51 @@ const initState: StoreModel = {
 };
 
 const cartReducer = (state = initState, action:any): StoreModel => {
-   
-    //INSIDE HOME COMPONENT
-    if(action.type === ADD_TO_CART) {
-        //let addedItem = state.items[0];
+
+    if (action.type === ADD_TO_CART) {
         let selectedItem = state.Items.find(item=> item.id === action.id)
-          //check if the action id exists in the addedItems
-         let existed_item = state.AddedItems.find(item=> action.id === item.id)
+        let existed_item = state.AddedItems.find(item=> action.id === item.id)
 
-        if(selectedItem){
-
-            if(existed_item)
+        if (selectedItem){
+            if (existed_item)
             {
                selectedItem.quantity += 1;
+
                 return {...state, TotalPrice: state.TotalPrice + selectedItem.price, 
                                 TotalQuantity: state.TotalQuantity +1
                 };
             }
-            else{
-                selectedItem.quantity = 1;
-                //calculating the total
+            else {
+                selectedItem.quantity = 1;  
                 let newTotalPrice = state.TotalPrice + selectedItem.price;
-                return{ ...state, AddedItems: [...state.AddedItems, selectedItem], 
+                return { ...state, AddedItems: [...state.AddedItems, selectedItem], 
                         TotalPrice : newTotalPrice, TotalQuantity: state.TotalQuantity +1
                 }
             }
         }
     }
 
-    if(action.type === REMOVE_ITEM){
+    if (action.type === REMOVE_ITEM){
         let itemToRemove= state.AddedItems.find(item=> action.id === item.id)
         let new_items = state.AddedItems.filter(item=> action.id !== item.id)
         
-        //calculating the total
-        if(itemToRemove){
+        if (itemToRemove) {
 
             let newTotal = state.TotalPrice - (itemToRemove.price * itemToRemove.quantity )
-            return{
-                ...state,
-                AddedItems: new_items,
-                TotalPrice: newTotal,
+            return {
+                ...state, AddedItems: new_items, TotalPrice: newTotal,
                 TotalQuantity: state.TotalQuantity - itemToRemove.quantity
             }
         }
     }
 
-    //INSIDE CART COMPONENT
     if(action.type === ADD_QUANTITY) {
         let addedItem = state.Items.find(item=> item.id === action.id)
 
         if(addedItem){
             addedItem.quantity += 1
             let newTotal = state.TotalPrice + addedItem.price
-            return{
+            return {
               ...state,
               TotalPrice: newTotal,
               TotalQuantity: state.TotalQuantity +1
@@ -83,28 +75,25 @@ const cartReducer = (state = initState, action:any): StoreModel => {
         }
     }
 
-    if(action.type === SUB_QUANTITY) {
+    if (action.type === SUB_QUANTITY) {
         let addedItem = state.Items.find(item=> item.id === action.id)
-        //if the qt == 0 then it should be removed
-        if(addedItem) {
 
+        if (addedItem) {
             if(addedItem.quantity === 1) {
                 let new_items = state.AddedItems.filter(item => item.id !== action.id)
                 let newTotal = state.TotalPrice - addedItem.price
+
                 return  {
-                    ...state,
-                    AddedItems: new_items,
-                    TotalPrice: newTotal,
+                    ...state, AddedItems: new_items,TotalPrice: newTotal,
                     TotalQuantity:state.TotalQuantity - 1
                 }
             }
             else {
-                //let  
                 addedItem.quantity -= 1;
                 let newTotal = state.TotalPrice - addedItem.price;
+
                 return {
-                    ...state,
-                    TotalPrice: newTotal,
+                    ...state,TotalPrice: newTotal,
                     TotalQuantity: state.TotalQuantity - 1
                 }
             }
@@ -112,13 +101,14 @@ const cartReducer = (state = initState, action:any): StoreModel => {
     }
 
     if(action.type === ADD_SHIPPING) {
+
         return {
-            ...state,
-            TotalPrice: state.TotalPrice + 6
+            ...state, TotalPrice: state.TotalPrice + 6
         }
     }
 
-    if(action.type === 'SUB_SHIPPING') {
+    if(action.type === SUB_SHIPPING) {
+        
         return {
             ...state,
             TotalPrice: state.TotalPrice - 6
@@ -127,7 +117,6 @@ const cartReducer = (state = initState, action:any): StoreModel => {
     else {
         return state
     }
-    
 }
 
 export default cartReducer
